@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Glorius.io</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div id="login-screen">
+        <div class="login-card">
+            <h1 class="game-title">GLORIUS<span class="highlight">.IO</span></h1>
+            <p class="game-subtitle">Survie • Construction • Bataille</p>
+            <div class="input-group">
+                <input type="text" id="username-input" placeholder="Ton Pseudo..." maxlength="12" autocomplete="off">
+            </div>
+            <button id="btn-play">
+                <span class="btn-shadow"></span>
+                <span class="btn-edge"></span>
+                <span class="btn-front">JOUER</span>
+            </button>
+            <div class="controls-hint">
+                <div class="hint-item"><span>WASD</span> Bouger</div>
+                <div class="hint-item"><span>Clic G</span> Action</div>
+                <div class="hint-item"><span>1-3</span> Objets</div>
+                <div class="hint-item"><span>R</span> Pivoter</div>
+            </div>
+            <div class="version-tag" id="ui-version"></div>
+        </div>
+    </div>
+    
+    <div id="ui-layer">
+        <div id="leaderboard">
+            <div class="lb-header">CLASSEMENT</div>
+            <ul id="lb-list">
+                </ul>
+        </div>
+        <div id="resource-panel">
+            <div class="res-item wood">
+                <svg class="res-icon" viewBox="0 0 512 512">
+                    <g transform="translate(20, 50)">
+                        
+                        <path d="M180 300 L440 300 A30 30 0 0 1 440 380 L180 380 Z" fill="#6D4C41"/>
+                        <ellipse cx="180" cy="340" rx="30" ry="40" fill="#D7CCC8"/>
+                        <path d="M180 340 m-15 0 a 15 20 0 1 0 30 0 a 15 20 0 1 0 -30 0" fill="none" stroke="#8D6E63" stroke-width="4"/>
+
+                        <path d="M80 320 L340 320 A30 30 0 0 1 340 400 L80 400 Z" fill="#8D6E63"/>
+                        <path d="M150 320 L300 320 L300 340 Z" fill="rgba(0,0,0,0.2)"/>
+                        <ellipse cx="80" cy="360" rx="35" ry="45" fill="#EFEBE9"/>
+                        <path d="M80 360 m-20 0 a 20 25 0 1 0 40 0 a 20 25 0 1 0 -40 0" fill="none" stroke="#A1887F" stroke-width="5"/>
+                        
+                        <path d="M130 230 L390 230 A30 30 0 0 1 390 310 L130 310 Z" fill="#A1887F"/>
+                        <ellipse cx="130" cy="270" rx="35" ry="45" fill="#EFEBE9"/>
+                        <path d="M130 270 m-18 0 a 18 22 0 1 0 36 0 a 18 22 0 1 0 -36 0" fill="none" stroke="#8D6E63" stroke-width="5"/>
+
+                        <path d="M250 230 Q300 180 350 230 Q300 280 250 230" fill="#4caf50" stroke="#2E7D32" stroke-width="2"/>
+                        <path d="M250 230 L350 230" stroke="#2E7D32" stroke-width="2"/>
+                    </g>
+                </svg>
+                <span id="ui-wood">0</span>
+            </div>
+
+            <div class="res-item stone">
+                <svg class="res-icon" viewBox="0 0 512 512">
+                    <g transform="translate(30,30) scale(0.9)">
+                        <path d="M150 450 L50 350 L80 150 L250 50 L420 120 L480 320 L350 480 Z" fill="#95a5a6"/>
+                        <path d="M80 150 L250 50 L220 250 Z" fill="#bdc3c7"/> 
+                        <path d="M250 50 L420 120 L350 250 L220 250 Z" fill="#ecf0f1"/>
+                        <path d="M480 320 L350 480 L250 400 L420 120 Z" fill="#7f8c8d"/>
+                        <path d="M150 450 L350 480 L250 400 L80 150 L50 350 Z" fill="#7f8c8d"/>
+                    </g>
+                </svg>
+                <span id="ui-stone">0</span>
+            </div>
+
+            <div class="res-item food">
+                <svg class="res-icon" viewBox="0 0 512 512">
+                    <g transform="rotate(-45, 256, 256)">
+                        <path d="M180 350 L220 350 L220 480 A20 20 0 0 1 180 480 Z" fill="#ecf0f1"/>
+                        <circle cx="170" cy="470" r="35" fill="#ecf0f1"/>
+                        <circle cx="230" cy="470" r="35" fill="#ecf0f1"/>
+                        
+                        <ellipse cx="200" cy="200" rx="120" ry="160" fill="#e74c3c"/>
+                        <ellipse cx="180" cy="180" rx="40" ry="60" fill="#c0392b" opacity="0.3"/> <path d="M200 360 L200 60 A20 20 0 0 0 200 360" fill="#ff7675" opacity="0.2"/> </g>
+                </svg>
+                <span id="ui-food">0</span>
+            </div>
+
+            <div class="res-item gold">
+                <svg class="res-icon" viewBox="0 0 512 512">
+                    <circle cx="256" cy="256" r="220" fill="#f1c40f"/>
+                    <circle cx="256" cy="256" r="180" fill="#f39c12"/>
+                    <path d="M256 120 L290 220 L390 220 L310 290 L340 390 L256 330 L172 390 L202 290 L122 220 L222 220 Z" fill="#f1c40f"/>
+                    <path d="M100 100 Q150 50 200 100" stroke="white" stroke-width="20" fill="none" opacity="0.6"/>
+                </svg>
+                <span id="ui-score">0</span>
+            </div>
+        </div>
+
+        <div id="build-instruction" style="display: none;"></div>
+        
+        <div id="xp-container">
+            <div id="xp-bar-bg">
+                <div id="xp-bar-fill"></div>
+                <div id="xp-text">Niveau 1</div>
+            </div>
+        </div>
+
+        <div id="hotbar">
+        <div class="slot" id="slot-sword" onclick="window.selectBuilding('SWORD')">
+            <div class="key-hint">1</div>
+            <div class="slot-content">
+                <svg class="game-icon" viewBox="0 0 100 100">
+                    <g transform="rotate(45, 50, 50)">
+                        <path d="M40 65 L42 15 L50 5 L58 15 L60 65 Z" fill="#ecf0f1" stroke="#7f8c8d" stroke-width="3"/>
+                        <line x1="50" y1="10" x2="50" y2="65" stroke="#bdc3c7" stroke-width="2"/>
+                        
+                        <path d="M25 65 L75 65 L75 72 Q50 80 25 72 Z" fill="#f1c40f" stroke="#e67e22" stroke-width="3"/>
+                        
+                        <rect x="44" y="72" width="12" height="14" fill="#5D4037"/>
+                        
+                        <circle cx="50" cy="90" r="6" fill="#f1c40f" stroke="#e67e22" stroke-width="3"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+        <div class="slot" id="slot-wall" onclick="window.selectBuilding('WALL')">
+            <div class="key-hint">2</div>
+            <div class="cost-tag">10 <span class="wood-dot"></span></div>
+            <div class="slot-content">
+                <svg class="game-icon" viewBox="0 0 100 100">
+                    <rect x="10" y="10" width="80" height="80" rx="5" fill="#8B5A2B" stroke="#5D4037" stroke-width="4"/>
+                    <line x1="10" y1="36" x2="90" y2="36" stroke="#5D4037" stroke-width="3"/>
+                    <line x1="10" y1="63" x2="90" y2="63" stroke="#5D4037" stroke-width="3"/>
+                    <path d="M30 10 V36 M70 10 V36 M50 36 V63 M20 63 V90 M80 63 V90" stroke="#684220" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+        <div class="slot" id="slot-door" onclick="window.selectBuilding('DOOR')">
+            <div class="key-hint">3</div>
+            <div class="cost-tag">15 <span class="wood-dot"></span></div>
+            <div class="slot-content">
+                <svg class="game-icon" viewBox="0 0 100 100">
+                    <rect x="20" y="10" width="60" height="80" fill="#5D4037"/>
+                    <rect x="25" y="15" width="50" height="70" fill="#8D6E63"/>
+                    <circle cx="65" cy="50" r="4" fill="#FFD700"/>
+                    <line x1="35" y1="15" x2="35" y2="85" stroke="#6D4C41" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+        <div class="slot" id="slot-wall-stone" onclick="window.selectBuilding('WALL_STONE')">
+            <div class="key-hint">4</div>
+            <div class="cost-tag">15 <span class="stone-dot"></span></div> <div class="slot-content">
+                <svg class="game-icon" viewBox="0 0 100 100">
+                    <rect x="10" y="10" width="80" height="80" rx="2" fill="#7f8c8d" stroke="#2c3e50" stroke-width="4"/>
+                    <line x1="10" y1="30" x2="90" y2="30" stroke="#2c3e50" stroke-width="3"/>
+                    <line x1="10" y1="50" x2="90" y2="50" stroke="#2c3e50" stroke-width="3"/>
+                    <line x1="10" y1="70" x2="90" y2="70" stroke="#2c3e50" stroke-width="3"/>
+                    <path d="M30 10 V30 M60 10 V30 M45 30 V50 M20 50 V70 M70 50 V70 M40 70 V90" stroke="#505050" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+        <div class="slot" id="slot-gold-tower" onclick="window.selectBuilding('GOLD_TOWER')">
+            <div class="key-hint">5</div>
+            <div class="cost-tag">40 <span class="stone-dot"></span> 40 <span class="wood-dot"></span></div>
+            <div class="slot-content">
+                <svg class="game-icon" viewBox="0 0 100 100">
+                    <path d="M25 90 L30 20 L70 20 L75 90 Z" fill="#FFD700" stroke="#B8860B" stroke-width="3"/>
+                    <rect x="20" y="10" width="15" height="10" fill="#FFD700" stroke="#B8860B" stroke-width="2"/>
+                    <rect x="42.5" y="10" width="15" height="10" fill="#FFD700" stroke="#B8860B" stroke-width="2"/>
+                    <rect x="65" y="10" width="15" height="10" fill="#FFD700" stroke="#B8860B" stroke-width="2"/>
+                    <circle cx="50" cy="55" r="12" fill="#FFF" opacity="0.5"/>
+                    <text x="50" y="60" font-size="18" text-anchor="middle" fill="#B8860B" font-weight="bold">$</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div id="unit-bar">
+        <div class="slot" id="slot-merc" onclick="window.buyMercenary()">
+            <div class="key-hint">6</div>
+            <div class="cost-tag">15 <span class="food-dot"></span></div>
+            <div class="slot-content">
+                <svg class="game-icon" viewBox="0 0 512 512">
+                    <path fill="#555" d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 469.3c-58.1 0-109.3-23.2-147.4-60.8 2.6-35.4 23.2-64.8 53.6-79.5 22.1 13.9 48.3 22.1 76.5 22.1 29.8 0 57.3-8.9 80.2-24.3 29.2 15.6 49.3 45.4 51.5 79.7-37.7 38.6-89.9 62.8-149.3 62.8z"/>
+                    <circle cx="256" cy="192" r="96" fill="#FFD700"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+        <div id="labels-container"></div>
+        <div id="chat-container">
+            <div id="chat-messages"></div>
+            <input type="text" id="chat-input" placeholder="Entrée pour parler...">
+        </div>
+        <div id="minimap-container">
+        <canvas id="minimap" width="150" height="150"></canvas>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="./js/Main.js"></script>
+</body>
+</html>

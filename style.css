@@ -1,0 +1,355 @@
+body { 
+    margin: 0; 
+    overflow: hidden; 
+    font-family: 'Roboto', sans-serif; 
+    background: #1a1a1a; 
+    user-select: none; 
+}
+
+/* --- ÉCRAN DE CONNEXION (LOGIN) --- */
+#login-screen {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4); 
+    backdrop-filter: blur(3px); 
+    display: flex; justify-content: center; align-items: center; z-index: 100;
+}
+
+.login-card {
+    background: rgba(30, 30, 30, 0.8);
+    backdrop-filter: blur(10px); 
+    padding: 40px 60px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    max-width: 400px;
+    width: 90%;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.game-title {
+    font-family: 'Fredoka One', cursive; 
+    font-size: 48px; margin: 0; color: white;
+    text-transform: uppercase; letter-spacing: 2px;
+    text-shadow: 4px 4px 0px #000;
+}
+.game-title .highlight { color: #4caf50; }
+.game-subtitle {
+    color: #aaa; margin-top: 5px; margin-bottom: 30px;
+    font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+}
+
+#username-input {
+    width: 100%; padding: 15px; font-size: 18px;
+    border: 2px solid #444; background: #222; color: white;
+    border-radius: 8px; outline: none; text-align: center;
+    font-family: 'Fredoka One', sans-serif; margin-bottom: 25px;
+    transition: 0.2s; box-sizing: border-box; 
+}
+#username-input:focus {
+    border-color: #4caf50; background: #2a2a2a;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+}
+
+#btn-play {
+    position: relative; border: none; background: transparent;
+    padding: 0; cursor: pointer; outline: none; width: 100%;
+}
+.btn-shadow {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 12px; background: rgba(0,0,0,0.25);
+    transform: translateY(2px); transition: transform 600ms cubic-bezier(.3, .7, .4, 1);
+}
+.btn-edge {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 12px;
+    background: linear-gradient(to left, #2E7D32 0%, #1B5E20 8%, #1B5E20 92%, #2E7D32 100%);
+}
+.btn-front {
+    display: block; position: relative; padding: 12px 0;
+    border-radius: 12px; font-size: 1.5rem; color: white;
+    font-family: 'Fredoka One', sans-serif; background: #4caf50;
+    transform: translateY(-6px); transition: transform 100ms cubic-bezier(.3, .7, .4, 1);
+    text-shadow: 1px 1px 0 #2E7D32;
+}
+#btn-play:hover .btn-front { transform: translateY(-8px); background: #55c55a; }
+#btn-play:hover .btn-shadow { transform: translateY(4px); }
+#btn-play:active .btn-front { transform: translateY(-2px); }
+#btn-play:active .btn-shadow { transform: translateY(1px); }
+
+.controls-hint { margin-top: 25px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+.hint-item { font-size: 12px; color: #888; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 6px; }
+.hint-item span { color: #fff; font-weight: bold; margin-right: 4px; }
+.version-tag { margin-top: 20px; font-size: 10px; color: #555; }
+
+/* --- UI DU JEU (HUD) --- */
+#ui-layer { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    pointer-events: none; display: none; font-family: 'Fredoka One', cursive;
+}
+
+/* --- RESSOURCES --- */
+#resource-panel {
+    position: absolute; top: 20px; left: 20px; /* <--- CHANGÉ de right à left */
+    /* right: 20px; <--- SUPPRIMER CECI */
+    display: flex; flex-direction: column; gap: 8px; pointer-events: auto; align-items: flex-start; /* flex-start pour aligner à gauche */
+}
+/* --- AJOUT : Styles du Leaderboard --- */
+#leaderboard {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 200px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    border-radius: 8px;
+    pointer-events: none; /* Laisse passer les clics */
+    font-family: 'Fredoka One', cursive;
+}
+
+.lb-header {
+    color: #FFD700; /* Or */
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 0 #000;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 5px;
+}
+
+#lb-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.lb-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: white;
+    margin-bottom: 4px;
+    text-shadow: 1px 1px 1px #000;
+}
+
+.lb-item span.gold-val {
+    color: #FFD700;
+}
+
+/* Surligner le joueur local */
+.lb-item.me {
+    color: #4caf50; /* Vert */
+    font-weight: bold;
+}
+.res-item {
+    background: rgba(30, 30, 30, 0.9); color: #eee;
+    padding: 6px 14px; border-radius: 8px; font-size: 16px;
+    display: flex; align-items: center; gap: 10px;
+    border-left: 4px solid #555; box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    min-width: 80px; justify-content: space-between;
+}
+.res-item.wood { border-color: #8B5A2B; } .res-item.wood .res-icon { color: #8B5A2B; }
+.res-item.stone { border-color: #95a5a6; } .res-item.stone .res-icon { color: #95a5a6; }
+.res-item.food { border-color: #e91e63; } .res-item.food .res-icon { color: #e91e63; }
+.res-item.gold { border-color: #f1c40f; color: #f1c40f; }
+.res-icon { width: 20px; height: 20px; filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.5)); }
+
+/* --- BARRE D'XP --- */
+#xp-container {
+    position: absolute; 
+    bottom: 100px; /* Juste au dessus de la hotbar */
+    left: 50%; transform: translateX(-50%);
+    width: 400px; max-width: 80%;
+    pointer-events: auto;
+}
+#xp-bar-bg {
+    width: 100%; height: 20px;
+    background: rgba(0,0,0,0.7);
+    border-radius: 10px;
+    border: 2px solid #333;
+    position: relative;
+    overflow: hidden;
+}
+#xp-bar-fill {
+    width: 0%; height: 100%;
+    background: linear-gradient(90deg, #6a1b9a, #ab47bc);
+    transition: width 0.3s ease-out;
+    box-shadow: 0 0 10px rgba(171, 71, 188, 0.5);
+}
+#xp-text {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: white; text-shadow: 1px 1px 1px black;
+    font-family: 'Roboto', sans-serif; font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* --- HOTBAR --- */
+#hotbar {
+    position: absolute; bottom: 20px; left: 50%;
+    transform: translateX(-50%); display: flex; gap: 10px; pointer-events: auto;
+}
+.slot {
+    width: 64px; height: 64px;
+    background: rgba(40, 40, 40, 0.95);
+    border: 2px solid #555; border-radius: 8px;
+    position: relative; cursor: pointer;
+    transition: transform 0.1s, border-color 0.1s;
+    display: flex; align-items: center; justify-content: center;
+}
+.slot:hover { transform: translateY(-4px); border-color: #888; }
+.slot.active {
+    border-color: #4caf50; background: rgba(40, 60, 40, 0.95);
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+    transform: translateY(-6px); z-index: 10;
+}
+.key-hint {
+    position: absolute; top: 4px; left: 5px;
+    color: #aaa; font-size: 10px; font-family: 'Roboto', sans-serif; font-weight: bold;
+}
+.slot.active .key-hint { color: #4caf50; }
+.slot-content { width: 65%; height: 65%; display: flex; align-items: center; justify-content: center; }
+.game-icon { width: 100%; height: 100%; filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.4)); }
+.cost-tag {
+    position: absolute; bottom: 2px; right: 4px;
+    font-size: 10px; color: #ddd;
+    background: rgba(0,0,0,0.6); padding: 1px 4px; border-radius: 4px;
+}
+.wood-dot { 
+    display: inline-block; width: 6px; height: 6px; 
+    background: #8B5A2B; border-radius: 50%; margin-left: 2px; 
+}
+
+/* --- LABELS ET HUD 3D --- */
+#build-instruction {
+    position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85); color: white; 
+    padding: 10px 20px; border-radius: 4px; text-align: center; pointer-events: none;
+    font-size: 14px; border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+#build-instruction b { color: #4caf50; font-size: 16px; letter-spacing: 1px; display: block; margin-bottom: 2px;}
+#build-instruction span { color: #bbb; font-size: 11px; font-family: 'Roboto', sans-serif; }
+
+.world-label {
+    position: absolute; transform: translate(-50%, -100%);
+    color: white; font-weight: bold; text-shadow: 1px 1px 2px black; font-size: 12px;
+    white-space: nowrap;
+}
+.lbl-name { 
+    background: rgba(0,0,0,0.6); padding: 2px 8px; border-radius: 10px; 
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; gap: 5px;
+}
+.lvl-badge {
+    background: #6a1b9a; color: white;
+    font-size: 10px; padding: 1px 4px; border-radius: 4px;
+    border: 1px solid #ab47bc;
+}
+
+.hp-bar-container {
+    position: absolute; width: 50px; height: 6px;
+    background: #330000; border: 1px solid #000;
+    transform: translate(-50%, 0); pointer-events: none; display: none;
+    border-radius: 3px; overflow: hidden;
+}
+.hp-bar-fill { width: 100%; height: 100%; background: #00ff00; transition: width 0.1s; }
+
+/* --- CHAT --- */
+#chat-container {
+    position: absolute; bottom: 10px; left: 10px; width: 320px; height: 220px;
+    display: flex; flex-direction: column; pointer-events: auto;
+}
+#chat-messages {
+    flex: 1; overflow-y: auto; text-shadow: 1px 1px 2px black; font-size: 14px;
+    padding-bottom: 5px; mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+}
+#chat-messages div { margin-bottom: 4px; padding-left: 5px;}
+#chat-messages b { color: #87CEEB; }
+
+#chat-input {
+    width: 100%; background: rgba(0,0,0,0.6);
+    border: 1px solid #444; border-radius: 4px;
+    color: white; padding: 8px; font-family: 'Roboto', sans-serif;
+}
+#chat-input:focus { outline: none; border-color: #888; background: rgba(0,0,0,0.8); }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #777; }
+
+/* --- TEXTE FLOTTANT --- */
+.floating-text {
+    position: absolute; color: white; font-weight: bold;
+    font-size: 24px; font-family: 'Fredoka One', cursive;
+    text-shadow: 2px 2px 0 #000; pointer-events: none; user-select: none;
+    animation: floatUp 0.8s ease-out forwards; z-index: 2000;
+}
+@keyframes floatUp {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
+}
+
+
+/* --- MINIMAP --- */
+#minimap-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 150px;
+    height: 150px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 4px solid rgba(0, 0, 0, 0.8);
+    border-radius: 50%; /* Rend la map ronde */
+    overflow: hidden;
+    pointer-events: auto; /* Permet de cliquer dessus si on veut ajouter des features plus tard */
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    z-index: 100;
+}
+
+#minimap {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.food-dot { 
+    display: inline-block; width: 6px; height: 6px; 
+    background: #e91e63; border-radius: 50%; margin-left: 2px; 
+}
+/* DANS style.css, ajoute ceci vers la section HOTBAR */
+
+/* --- BARRE D'UNITÉS (Verticale Droite) --- */
+#unit-bar {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%); /* Centré verticalement */
+    display: flex;
+    flex-direction: column; /* Empilement vertical */
+    gap: 15px;
+    pointer-events: auto;
+}
+
+/* On peut garder le style .slot existant, mais on peut forcer 
+   l'infobulle de coût à être sur le côté si on veut (optionnel) */
+#unit-bar .slot .cost-tag {
+    right: auto;
+    left: -5px; /* Déplace le prix un peu vers la gauche pour ne pas sortir de l'écran */
+    transform: translateX(-100%);
+    bottom: 50%; /* Centre le prix verticalement par rapport au bouton */
+    top: auto;
+    margin-bottom: -8px; /* Ajustement fin pour centrer */
+}
+
+.stone-dot { 
+    display: inline-block; width: 6px; height: 6px; 
+    background: #95a5a6; border-radius: 50%; margin-left: 2px; 
+}
